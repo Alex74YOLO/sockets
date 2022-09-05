@@ -10,10 +10,9 @@ void die(char *error)
 	exit(1);
 }
 
-const char message[] = "Hello\n";
-
 int main(int argc, char const *argv[])
 {
+	char message[256];
 	int serverFd;
 	struct sockaddr_in server;
 	int len;
@@ -49,7 +48,7 @@ int main(int argc, char const *argv[])
 	if(read(serverFd, recv, sizeof(recv)) < 0)
 		die("read error");
 
-	printf("%s from server\n", recv);
+	printf("server: '%s'\n", recv);
 
 	close(serverFd);
 

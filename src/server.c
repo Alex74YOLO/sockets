@@ -46,7 +46,7 @@ int main(int argc, char const *argv[])
 			die("accept error");
 
 		char *client_ip = inet_ntoa(client.sin_addr);
-		printf("Accepted new connection %s : %d\n", client_ip, ntohs(client.sin_port));
+		printf("Accepted new connection: %s : %d\n", client_ip, ntohs(client.sin_port));
 		memset(buffer, 0, sizeof(buffer));
 		
 		int size = read(clientFd, buffer, sizeof(buffer));
