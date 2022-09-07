@@ -37,6 +37,7 @@ int main(int argc, char const *argv[])
 	if((listen(serverFd, 10)) < 0)
 		die("listen error");
 
+LOOP:
 	while(1)
 	{
 		len = sizeof(client);
@@ -48,17 +49,23 @@ int main(int argc, char const *argv[])
 		char *client_ip = inet_ntoa(client.sin_addr);
 		printf("Accepted new connection: %s : %d\n", client_ip, ntohs(client.sin_port));
 		memset(buffer, 0, sizeof(buffer));
-		
-		int size = read(clientFd, buffer, sizeof(buffer));
-		if(size < 0)
-			die("read error");
+	
+    while(1)
+    {
+      int size = read(clientFd, buffer, sizeof(buffer));
+		  if(size < 0)
+			  die("read error"); 
 
-		printf("received: '%s'\n", buffer);
-		if(write(clientFd, buffer, size) < 0)
-			die("write error");
+		  printf("received: '%s'\n", buffer);
+		  if(write(clientFd, buffer, size) < 0)
+			  die("write error");
 
-		close(clientFd);
-	}
+      if(strcmp(buffer, "quit") == 0)
+        goto LOOP;
+
+      memset(buffer, 0, sizeof(buffer));
+    }
+  }
 
 	close(serverFd);
 

@@ -18,7 +18,7 @@ int main(int argc, char const *argv[])
 	int len;
 	int port = 9002;
 	char *server_ip = "127.0.0.1";
-	char *buffer = "hello server";
+	char *buffer[256];
 	
 	if(argc == 3)
 	{
@@ -38,19 +38,27 @@ int main(int argc, char const *argv[])
 
 	if(connect(serverFd, (struct sockaddr *) &server, len) < 0)
 		die("connect error");
+  while(1)
+  {
+    printf("Enter message: ");
+    gets(buffer);
 
-	if(write(serverFd, buffer, strlen(buffer)) < 0)
-		die("write error");
+	  if(write(serverFd, buffer, strlen(buffer)) < 0)
+		  die("write error");
 
-	char recv[1024];
-	memset(recv, 0, sizeof(recv));
+	  char recv[1024];
+	  memset(recv, 0, sizeof(recv));
 	
-	if(read(serverFd, recv, sizeof(recv)) < 0)
-		die("read error");
+	  if(read(serverFd, recv, sizeof(recv)) < 0)
+		  die("read error");
 
-	printf("server: '%s'\n", recv);
+	  printf("server: '%s'\n", recv);
 
-	close(serverFd);
+    if(strcmp(buffer, "quit") == 0)
+        break;
+  }
+
+ 	close(serverFd);
 
 	return 0;
 }
